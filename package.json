@@ -29,11 +29,10 @@
     "@typescript-eslint/parser": "^8.39.1"
   },
   "dependencies": {
-    "@effect/platform": "^0.90.3",
     "attio": "^0.0.1-experimental.20250815.1",
-    "effect": "^3.17.7",
-    "effect-attio": "^0.2.0",
+    "event-target-polyfill": "^0.0.4",
     "react": "19.1.1",
+    "yet-another-abortcontroller-polyfill": "^0.0.4",
     "zod": "4.0.17"
   }
 }
