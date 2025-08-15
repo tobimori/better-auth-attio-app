@@ -12,7 +12,7 @@ export class AttioAppClient extends AttioClient<AttioAppClient>()("AttioAppClien
   get Default() {
     // biome-ignore lint/suspicious/noExplicitAny: TODO: add option without layers to attio client
     return AttioAppClient.Default({} as any).pipe(
-      Layer.provide(AttioFetchHttpClient.Default().pipe(Layer.provide(AttioFetchClient.Default)))
+      Layer.provide(AttioFetchHttpClient.Default().pipe(Layer.provide(AttioFetchClient)))
     )
   }
 }

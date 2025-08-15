@@ -1,20 +1,22 @@
-import * as Effect from "effect/Effect"
-import * as FiberRef from "effect/FiberRef"
-import * as Stream from "effect/Stream"
-import * as Headers from "../Headers.js"
-import type * as Client from "../HttpClient.js"
-import * as Error from "../HttpClientError.js"
-import * as client from "./httpClient.js"
-import * as internalResponse from "./httpClientResponse.js"
+import {
+  type HttpClient as Client,
+  Headers,
+  HttpClient,
+  HttpClientError,
+  HttpClientResponse,
+} from "@effect/platform"
+import {Effect, FiberRef, Stream} from "effect"
 
 export const attioFetchTagKey = "@effect/platform/AttioFetchHttpClient/Fetch"
 export const attioRequestInitTagKey = "@effect/platform/AttioFetchHttpClient/FetchOptions"
 
-const attioFetch: Client.HttpClient = client.make((request, url, signal, fiber) => {
+const attioFetch: Client.HttpClient = HttpClient.make((request, url, signal, fiber) => {
   const context = fiber.getFiberRef(FiberRef.currentContext)
   const fetch: typeof globalThis.fetch = context.unsafeMap.get(attioFetchTagKey) ?? globalThis.fetch
   const options: RequestInit = context.unsafeMap.get(attioRequestInitTagKey) ?? {}
-  const headers = options.headers ? Headers.merge(Headers.fromInput(options.headers), request.headers) : request.headers
+  const headers = options.headers
+    ? Headers.merge(Headers.fromInput(options.headers), request.headers)
+    : request.headers
   const send = (body: BodyInit | undefined) =>
     Effect.map(
       Effect.tryPromise({
@@ -25,16 +27,16 @@ const attioFetch: Client.HttpClient = client.make((request, url, signal, fiber) 
             headers,
             body,
             duplex: request.body._tag === "Stream" ? "half" : undefined,
-            signal
+            signal,
           } as any),
         catch: (cause) =>
-          new Error.RequestError({
+          new HttpClientError.RequestError({
             request,
             reason: "Transport",
-            cause
-          })
+            cause,
+          }),
       }),
-      (response) => internalResponse.fromWeb(request, response)
+      (response) => HttpClientResponse.fromWeb(request, response)
     )
   switch (request.body._tag) {
     case "Raw":
@@ -48,4 +50,4 @@ const attioFetch: Client.HttpClient = client.make((request, url, signal, fiber) 
   return send(undefined)
 })
 
-export const AttioFetchClient = client.layerMergedContext(Effect.succeed(attioFetch))
+export const AttioFetchClient = HttpClient.layerMergedContext(Effect.succeed(attioFetch))
