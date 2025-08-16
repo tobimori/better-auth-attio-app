@@ -1,12 +1,6 @@
-/**
- * Internal Webhook handler for Attio events
- *
- * Receives events from Attio, enriches them with full record data,
- * and forwards to the remote server configured in the connection
- */
-
 import {getWorkspaceConnection} from "attio/server"
 import {z} from "zod"
+import {listObjectsResponseSchema} from "../schemas/object"
 import {attioFetch} from "../utils/attio-fetch"
 import {decodeConnection, getBaseUrl} from "../utils/connection"
 import {zfetch} from "../utils/fetch"
@@ -30,6 +24,12 @@ const attioWebhookPayloadSchema = z.object({
   events: z.array(attioEventSchema),
 })
 
+/**
+ * Internal Webhook handler for Attio events
+ *
+ * Receives events from Attio, enriches them with full record data,
+ * and forwards to the remote server configured in the connection
+ */
 export default async function internalWebhook(request: Request): Promise<Response> {
   const parseResult = attioWebhookPayloadSchema.safeParse(await request.json())
   if (!parseResult.success) {
@@ -41,23 +41,33 @@ export default async function internalWebhook(request: Request): Promise<Respons
   const connection = getWorkspaceConnection()
   const connectionData = decodeConnection(connection.value)
 
-  // enrich events with full record data
-  const enrichedEvents = await Promise.all(
-    payload.events.map(async (event) => {
-      const recordResult = await attioFetch({
-        path: `/objects/${event.id.object_id}/records/${event.id.record_id}`,
-        method: "GET",
-      })
+  const [objectsResult, records] = await Promise.all([
+    attioFetch({
+      path: `/objects`,
+      method: "GET",
+      responseSchema: listObjectsResponseSchema,
+    }),
+    Promise.all(
+      payload.events.map((e) =>
+        attioFetch({path: `/objects/${e.id.object_id}/records/${e.id.record_id}`, method: "GET"})
+      )
+    ),
+  ])
 
-      return {
-        ...event,
-        record: recordResult.data,
-        error: recordResult.error?.message,
-      }
-    })
-  )
+  if (objectsResult.error) {
+    console.error("Failed to fetch objects:", objectsResult.error)
+    return new Response(null, {status: 500})
+  }
 
-  // forward to remote server
+  const objectMap = new Map(objectsResult.data?.map((o) => [o.id.object_id, o]) || [])
+
+  const enrichedEvents = payload.events.map((event, i) => ({
+    ...event,
+    record: records[i].data,
+    object: objectMap.get(event.id.object_id),
+    error: records[i].error?.message,
+  }))
+
   const forwardResult = await zfetch(
     `${getBaseUrl(connectionData.uri, connectionData.base)}/attio/webhook`,
     {
