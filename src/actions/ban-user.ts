@@ -1,11 +1,12 @@
 import type { RecordAction } from "attio/client";
+import { showUserBanManagementDialog } from "../dialog/ban-user";
 
 export const recordAction: RecordAction = {
 	id: "ban-user",
 	label: "Ban User",
 	icon: "User",
 	onTrigger: async ({ recordId }) => {
-		// Run code here
+		showUserBanManagementDialog(recordId);
 	},
 	objects: "users",
 };

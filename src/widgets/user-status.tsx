@@ -1,5 +1,6 @@
 import { type RecordWidget, useAsyncCache, Widget } from "attio/client";
 import { Suspense } from "react";
+import { showUserBanManagementDialog } from "../dialog/ban-user";
 import getUserDetails from "../fn/user-details.server";
 import { useRelativeTime } from "../hooks/use-relative-time";
 
@@ -16,7 +17,13 @@ const UserWidget = ({ recordId }: { recordId: string }) => {
 		: null;
 
 	return (
-		<Widget.TextWidget>
+		<Widget.TextWidget
+			onTrigger={
+				userDetails.role !== null
+					? () => showUserBanManagementDialog(recordId)
+					: undefined
+			}
+		>
 			<Widget.Title>Status</Widget.Title>
 			<Widget.Text.Primary>{userDetails.name}</Widget.Text.Primary>
 			{userDetails.role !== null ? (
