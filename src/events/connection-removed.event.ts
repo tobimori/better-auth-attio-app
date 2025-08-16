@@ -47,7 +47,6 @@ export default async function connectionRemoved({connection}: {connection: Conne
 
     if (result.error) {
       console.error("Failed to unlink webhook:", result.error)
-      throw new Error(`Failed to unlink webhook: ${result.error.message}`)
     }
 
     await deleteWebhookHandler(incomingWebhook.id)
