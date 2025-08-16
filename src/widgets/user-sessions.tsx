@@ -7,10 +7,11 @@ import { parseUserAgent } from "../utils/user-agent";
 
 const SessionsWidget = ({ recordId }: { recordId: string }) => {
 	const results = useAsyncCache({
-		sessions: [getSessions, recordId],
+		[`sessions_${recordId}`]: [getSessions, recordId],
 	});
 
-	const { sessions: sessionList, activeCount } = results.values.sessions;
+	const { sessions: sessionList, activeCount } =
+		results.values[`sessions_${recordId}`];
 
 	// get the most recent session for display
 	const mostRecentSession = sessionList[0];

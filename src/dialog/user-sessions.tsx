@@ -61,17 +61,17 @@ const SessionItem = ({
 
 const UserSessionsDialogContent = ({ recordId }: { recordId: string }) => {
 	const results = useAsyncCache({
-		sessions: [getSessions, recordId],
+		[`sessions_${recordId}`]: [getSessions, recordId],
 	});
 
 	return (
 		<DialogList emptyState={{ text: "No sessions found" }}>
-			{results.values.sessions.sessions.map((session) => (
+			{results.values[`sessions_${recordId}`].sessions.map((session) => (
 				<SessionItem
 					key={session.token}
 					session={session}
 					onRevoke={() => {
-						results.invalidate("sessions");
+						results.invalidate(`sessions_${recordId}`);
 					}}
 				/>
 			))}
