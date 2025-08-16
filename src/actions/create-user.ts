@@ -1,6 +1,6 @@
 import { type RecordAction, runQuery, showToast } from "attio/client";
 import { showSelectEmailDialog } from "../dialog/select-email";
-import createUserFromPerson from "../fn/create-user-from-person.server";
+import createUserFromPerson from "../fn/create-user.server";
 import getPerson from "../graphql/get-person.graphql";
 import { tryCatch } from "../utils/try-catch";
 

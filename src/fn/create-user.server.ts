@@ -14,8 +14,8 @@ export default async function createUserFromPerson(
   email: string,
   name: string
 ) {
-  const randomId = `todo:${Math.random().toString(36).substring(2, 15)}${Date.now().toString(36)}`;
-  
+  const randomId = `todo:${Math.random().toString(36).substring(2, 15)}${Date.now().toString(36)}`
+
   const userResult = await attioFetch({
     method: "POST",
     path: `/objects/users/records`,
