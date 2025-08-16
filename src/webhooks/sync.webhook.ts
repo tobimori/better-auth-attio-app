@@ -193,7 +193,7 @@ export default async function syncWebhook(request: Request): Promise<Response> {
 	const path = isUpdate
 		? (`/objects/${fieldMapping.object}/records/${recordId}` as const)
 		: (`/objects/${fieldMapping.object}/records` as const);
-	const method = isUpdate ? "PATCH" : "POST";
+	const method = isUpdate ? "PUT" : "POST";
 
 	// make the request
 	const result = await attioFetch({
