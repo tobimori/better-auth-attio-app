@@ -15,7 +15,7 @@ const attioEventSchema = z.object({
   }),
   actor: z.object({
     type: z.string(),
-    id: z.string(),
+    id: z.string().nullable(),
   }),
 })
 
