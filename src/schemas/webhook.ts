@@ -88,9 +88,6 @@ export const createWebhookResponseSchema = webhookSchema.extend({
 // list webhooks response schema
 export const listWebhooksResponseSchema = z.array(webhookSchema)
 
-// single webhook response schema
-export const getWebhookResponseSchema = webhookSchema
-
+export type Webhook = z.infer<typeof webhookSchema>
 export type CreateWebhookResponse = z.infer<typeof createWebhookResponseSchema>
 export type ListWebhooksResponse = z.infer<typeof listWebhooksResponseSchema>
-export type GetWebhookResponse = z.infer<typeof getWebhookResponseSchema>

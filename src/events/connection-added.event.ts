@@ -38,10 +38,10 @@ export default async function connectionAdded({connection}: {connection: Connect
             event_type: "record.deleted",
             filter: null,
           },
-          {
+          /* { // only people and companies support merging.
             event_type: "record.merged",
             filter: null,
-          },
+          },*/
         ],
       },
     },
