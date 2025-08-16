@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import revokeSession from "../fn/revoke-session.server";
 import getSessions, { type Session } from "../fn/sessions.server";
 import { useRelativeTime } from "../hooks/use-relative-time";
+import { tryCatch } from "../utils/try-catch";
 import { parseUserAgent } from "../utils/user-agent";
 
 const SessionItem = ({
@@ -27,25 +28,28 @@ const SessionItem = ({
 			icon={isMobile ? "MobilePhone" : "Desktop"}
 			actionLabel="Revoke session"
 			onTrigger={async () => {
-				try {
-					showToast({
-						variant: "neutral",
-						title: "Revoking session…",
-					});
-					await revokeSession(session.token);
-					showToast({
-						variant: "success",
-						title: "Session revoked",
-						text: "The session has been successfully revoked",
-					});
-					onRevoke();
-				} catch (error) {
+				const { hideToast } = await showToast({
+					variant: "neutral",
+					title: "Revoking session…",
+				});
+
+				const result = await tryCatch(revokeSession(session.token));
+				await hideToast();
+
+				if (result.error) {
 					showToast({
 						variant: "error",
 						title: "Failed to revoke session",
-						text: error instanceof Error ? error.message : "An error occurred",
 					});
+					return;
 				}
+
+				showToast({
+					variant: "success",
+					title: "Session revoked",
+					text: "The session has been successfully revoked",
+				});
+				onRevoke();
 			}}
 			suffix={<Typography.Body>{relativeTime}</Typography.Body>}
 		>
