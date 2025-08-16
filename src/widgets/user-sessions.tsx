@@ -15,6 +15,8 @@ const SessionsWidget = ({ recordId }: { recordId: string }) => {
 
 	// get the most recent session for display
 	const mostRecentSession = sessionList[0];
+	const isImpersonation = mostRecentSession?.impersonatedBy;
+	
 	const { browser, system } = mostRecentSession
 		? parseUserAgent(mostRecentSession.userAgent || "")
 		: { browser: "Unknown", system: "Unknown" };
@@ -33,9 +35,13 @@ const SessionsWidget = ({ recordId }: { recordId: string }) => {
 			{mostRecentSession ? (
 				<>
 					<Widget.Text.Primary>
-						{system} • {browser}
+						{isImpersonation 
+							? `Impersonated by ${mostRecentSession.impersonatedBy}`
+							: `${system} • ${browser}`
+						}
 					</Widget.Text.Primary>
 					<Widget.Text.Secondary>
+						{isImpersonation && `${system} • ${browser} • `}
 						{mostRecentSession.ipAddress &&
 							`IP: ${mostRecentSession.ipAddress} • `}
 						Last active: {relativeTime}

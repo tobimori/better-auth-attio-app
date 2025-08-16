@@ -12,6 +12,7 @@ const sessionSchema = z.object({
 	ipAddress: z.string(),
 	token: z.string(),
 	userId: z.string(),
+	impersonatedBy: z.string().nullable().optional(),
 });
 
 const sessionsResponseSchema = z.object({

@@ -22,10 +22,13 @@ const SessionItem = ({
 	const { browser, system, isMobile } = parseUserAgent(session.userAgent || "");
 	const relativeTime = useRelativeTime(session.updatedAt);
 
+	// check if this is an impersonation session
+	const isImpersonation = session.impersonatedBy;
+
 	return (
 		<DialogList.Item
 			key={session.token}
-			icon={isMobile ? "MobilePhone" : "Desktop"}
+			icon={isImpersonation ? "User" : isMobile ? "MobilePhone" : "Desktop"}
 			actionLabel="Revoke session"
 			onTrigger={async () => {
 				const { hideToast } = await showToast({
@@ -53,8 +56,17 @@ const SessionItem = ({
 			}}
 			suffix={<Typography.Body>{relativeTime}</Typography.Body>}
 		>
-			{system} • {browser}
-			{session.ipAddress && ` • IP: ${session.ipAddress}`}
+			{isImpersonation ? (
+				<>
+					Impersonated by {session.impersonatedBy} • {system} • {browser}
+					{session.ipAddress && ` • IP: ${session.ipAddress}`}
+				</>
+			) : (
+				<>
+					{system} • {browser}
+					{session.ipAddress && ` • IP: ${session.ipAddress}`}
+				</>
+			)}
 		</DialogList.Item>
 	);
 };
