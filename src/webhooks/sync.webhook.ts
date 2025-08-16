@@ -188,48 +188,35 @@ export default async function syncWebhook(request: Request): Promise<Response> {
 		}
 	}
 
-	if (recordId) {
-		// update existing record
-		const result = await attioFetch({
-			path: `/objects/${fieldMapping.object}/records/${recordId}`,
-			method: "PATCH",
-			body: {
-				data: {
-					values: {
-						user_id: "PctahnRZfxUHGlHvQerQb36GmmZOi1ww",
-						name: "sdfkskjafdkjjksdf",
-						primary_email_address: "fdkskjfsdjkf@dsasde.de",
-						email_verified: false,
-					},
-				},
-			},
-			responseSchema: recordSchema,
-		});
+	// prepare request based on whether we're updating or creating
+	const isUpdate = !!recordId;
+	const path = isUpdate
+		? (`/objects/${fieldMapping.object}/records/${recordId}` as const)
+		: (`/objects/${fieldMapping.object}/records` as const);
+	const method = isUpdate ? "PATCH" : "POST";
 
-		if (result.error) {
-			console.error(`Failed to update record in Attio:`, result.error);
-			return new Response(null, { status: 500 });
-		}
-	} else {
-		// create new record
-		const result = await attioFetch({
-			path: `/objects/${fieldMapping.object}/records`,
-			method: "POST",
-			body: {
-				data: {
-					values: attioData,
-				},
+	// make the request
+	const result = await attioFetch({
+		path,
+		method,
+		body: {
+			data: {
+				values: attioData,
 			},
-			responseSchema: recordSchema,
-		});
+		},
+		responseSchema: recordSchema,
+	});
 
-		if (result.error) {
-			console.error(`Failed to create record in Attio:`, result.error);
-			return new Response(null, { status: 500 });
-		}
+	if (result.error) {
+		const action = isUpdate ? "update" : "create";
+		console.error(`Failed to ${action} record in Attio:`, result.error);
+		return new Response(null, { status: 500 });
 	}
 
-	console.log(`Synced ${event} to Attio ${fieldMapping.object}:`, recordId);
+	console.log(
+		`Synced ${event} to Attio ${fieldMapping.object}:`,
+		result.data?.id.record_id,
+	);
 
 	return new Response(null, { status: 200 });
 }
