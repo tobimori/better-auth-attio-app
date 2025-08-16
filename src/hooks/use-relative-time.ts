@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 
-export const useRelativeTime = (dateString: string) => {
+export const useRelativeTime = (dateString: string | null | undefined) => {
 	const [, setTick] = useState(0);
 
 	useEffect(() => {
+		if (!dateString) return;
+		
 		const targetDate = new Date(dateString);
 		
 		const scheduleNextUpdate = () => {
@@ -46,6 +48,9 @@ export const useRelativeTime = (dateString: string) => {
 		
 		return () => clearTimeout(timeout);
 	}, [dateString]);
+	
+	// return null if no date string provided
+	if (!dateString) return null;
 	
 	// calculate relative time
 	const date = new Date(dateString);
