@@ -11,6 +11,7 @@ const InvitationsWidget = ({recordId}: {recordId: string}) => {
 
   const {invitations, count} = results.values[`invitations_${recordId}`]
   const mostRecentInvitation = invitations[0]
+  console.log(mostRecentInvitation)
   const relativeTime = useRelativeTime(mostRecentInvitation?.expiresAt)
 
   const capitalizedRole = mostRecentInvitation?.role
@@ -25,9 +26,9 @@ const InvitationsWidget = ({recordId}: {recordId: string}) => {
           <Widget.Text.Primary>{mostRecentInvitation.email}</Widget.Text.Primary>
           <Widget.Text.Secondary>
             {mostRecentInvitation.status === "pending"
-              ? `Pending • ${capitalizedRole}`
+              ? capitalizedRole
               : mostRecentInvitation.status}{" "}
-            • {relativeTime}
+            • Expires {relativeTime}
           </Widget.Text.Secondary>
         </>
       ) : (

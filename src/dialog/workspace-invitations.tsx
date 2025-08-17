@@ -40,7 +40,7 @@ const InvitationItem = ({invitation, onCancel}: {invitation: Invitation; onCance
 
         onCancel()
       }}
-      suffix={<Typography.Body>{relativeTime}</Typography.Body>}
+      suffix={<Typography.Body>Expires {relativeTime}</Typography.Body>}
     >
       {invitation.email} • {capitalizedRole}
       {invitation.inviter && (
