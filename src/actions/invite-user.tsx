@@ -6,11 +6,13 @@ import {
 	runQuery,
 	showDialog,
 	showToast,
+	useAsyncCache,
 	useForm,
 } from "attio/client";
 import getOrganizationRoles from "../fn/get-organization-roles.server";
 import inviteUser from "../fn/invite-user.server";
 import searchUsers from "../fn/search-users.server";
+import getWorkspaceInvitations from "../fn/workspace-invitations.server";
 import getCurrentUser from "../graphql/current-user.graphql";
 import { tryCatch } from "../utils/try-catch";
 
@@ -76,6 +78,10 @@ export const recordAction: RecordAction = {
 		showDialog({
 			title: "Invite User",
 			Dialog: () => {
+				const results = useAsyncCache({
+					[`invitations_${recordId}`]: [getWorkspaceInvitations, recordId],
+				});
+
 				const { Form, SubmitButton, Combobox } = useForm(
 					{
 						email: Forms.string(),
@@ -114,6 +120,8 @@ export const recordAction: RecordAction = {
 								),
 							);
 							await hideToast();
+
+							results.invalidate(`invitations_${recordId}`);
 
 							if (result.error) {
 								await showToast({

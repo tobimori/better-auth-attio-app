@@ -24,6 +24,9 @@ const InvitationItem = ({
 		invitation.createdAt || invitation.expiresAt,
 	);
 
+	const capitalizedRole =
+		invitation.role.charAt(0).toUpperCase() + invitation.role.slice(1);
+
 	return (
 		<DialogList.Item
 			key={invitation.id}
@@ -56,7 +59,7 @@ const InvitationItem = ({
 			}}
 			suffix={<Typography.Body>{relativeTime}</Typography.Body>}
 		>
-			{invitation.email} • {invitation.role}
+			{invitation.email} • {capitalizedRole}
 			{invitation.inviter && (
 				<> • Invited by {invitation.inviter.name || invitation.inviter.email}</>
 			)}

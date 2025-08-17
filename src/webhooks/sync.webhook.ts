@@ -200,11 +200,11 @@ export default async function syncWebhook(request: Request): Promise<Response> {
 		return new Response(null, { status: 500 });
 	}
 
-	// remove internal fields from data
+	// remove internal fields from data and convert nulls to empty arrays for Attio
 	const attioData: Record<string, unknown> = {};
 	for (const [key, value] of Object.entries(data)) {
 		if (key !== "_deleted" && key !== "record_id") {
-			attioData[key] = value;
+			attioData[key] = value === null ? [] : value;
 		}
 	}
 
