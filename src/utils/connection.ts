@@ -49,20 +49,20 @@ export const getBaseUrl = (uri: string, base: string): string => {
   if (!normalizedUri.startsWith("http://") && !normalizedUri.startsWith("https://")) {
     normalizedUri = `https://${normalizedUri}`
   }
-  
+
   // remove trailing slash from uri
   normalizedUri = normalizedUri.replace(/\/$/, "")
-  
+
   // normalize base path
   let normalizedBase = base.trim()
-  
+
   // ensure base starts with / if not empty
   if (normalizedBase && !normalizedBase.startsWith("/")) {
     normalizedBase = `/${normalizedBase}`
   }
-  
+
   // remove trailing slash from base
   normalizedBase = normalizedBase.replace(/\/$/, "")
-  
+
   return normalizedUri + normalizedBase
 }

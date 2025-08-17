@@ -1,7 +1,7 @@
 import type {z} from "zod"
 import type {Result} from "./try-catch"
 
-interface FetchOptions<T = any> extends Omit<RequestInit, 'body'> {
+interface FetchOptions<T = any> extends Omit<RequestInit, "body"> {
   baseURL?: string
   responseSchema?: z.ZodType<T>
   body?: any
@@ -21,7 +21,7 @@ export async function zfetch<T = any>(
     const {baseURL, responseSchema, body, params, ...fetchOptions} = options
 
     let url = baseURL ? `${baseURL}${path}` : path
-    
+
     if (params) {
       const searchParams = new URLSearchParams()
       for (const [key, value] of Object.entries(params)) {
@@ -31,11 +31,11 @@ export async function zfetch<T = any>(
       }
       const queryString = searchParams.toString()
       if (queryString) {
-        url += (url.includes('?') ? '&' : '?') + queryString
+        url += (url.includes("?") ? "&" : "?") + queryString
       }
     }
 
-    let finalBody: RequestInit['body'] = body
+    let finalBody: RequestInit["body"] = body
     if (body && typeof body === "object") {
       finalBody = JSON.stringify(body)
       fetchOptions.headers = {
