@@ -77,7 +77,7 @@ export const recordAction: RecordAction = {
 	onTrigger: async ({ recordId }) => {
 		showDialog({
 			title: "Invite User",
-			Dialog: () => {
+			Dialog: ({ hideDialog }) => {
 				const results = useAsyncCache({
 					[`invitations_${recordId}`]: [getWorkspaceInvitations, recordId],
 				});
@@ -137,6 +137,8 @@ export const recordAction: RecordAction = {
 								text: `Invitation sent to ${values.email}`,
 								variant: "success",
 							});
+
+							hideDialog();
 						}}
 					>
 						<Row>
