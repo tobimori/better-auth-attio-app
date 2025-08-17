@@ -5,6 +5,7 @@ interface FetchOptions<T = any> extends Omit<RequestInit, 'body'> {
   baseURL?: string
   responseSchema?: z.ZodType<T>
   body?: any
+  params?: Record<string, any>
 }
 
 interface FetchError extends Error {
@@ -17,9 +18,22 @@ export async function zfetch<T = any>(
   options: FetchOptions<T> = {}
 ): Promise<Result<T, FetchError>> {
   try {
-    const {baseURL, responseSchema, body, ...fetchOptions} = options
+    const {baseURL, responseSchema, body, params, ...fetchOptions} = options
 
-    const url = baseURL ? `${baseURL}${path}` : path
+    let url = baseURL ? `${baseURL}${path}` : path
+    
+    if (params) {
+      const searchParams = new URLSearchParams()
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value))
+        }
+      }
+      const queryString = searchParams.toString()
+      if (queryString) {
+        url += (url.includes('?') ? '&' : '?') + queryString
+      }
+    }
 
     let finalBody: RequestInit['body'] = body
     if (body && typeof body === "object") {
