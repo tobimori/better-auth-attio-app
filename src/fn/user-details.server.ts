@@ -39,8 +39,7 @@ export default async function getUserDetails(recordId: string) {
   })
 
   if (result.error) {
-    // check if it's because admin plugin is not enabled
-    if ((result.error as any)?.error === "ADMIN_PLUGIN_NOT_ENABLED") {
+    if (result.error.status === 501) {
       return {
         name,
         role: null,

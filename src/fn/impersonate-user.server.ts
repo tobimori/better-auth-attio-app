@@ -36,10 +36,10 @@ export default async function impersonateUser(recordId: string, adminEmail: stri
   })
 
   if (result.error) {
-    // check for specific errors
-    if ((result.error as any)?.error === "ADMIN_PLUGIN_NOT_ENABLED") {
+    if (result.error.status === 501) {
       throw new Error("Admin features are not available")
     }
+
     throw new Error("Failed to create impersonation session")
   }
 
