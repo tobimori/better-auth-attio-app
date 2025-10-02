@@ -1,39 +1,39 @@
 {
-  "name": "better-auth",
-  "description": "Better Auth",
-  "private": true,
-  "version": "0.0.1",
-  "type": "module",
-  "scripts": {
-    "attio": "attio",
-    "dev": "attio dev",
-    "build": "attio build",
-    "format": "biome format --write src/",
-    "format:check": "biome format src/",
-    "clean": "rm -rf lib && rm -rf dist",
-    "lint": "npm run lint:biome && npm run lint:attio",
-    "lint:biome": "ATTIO_LINT_MODE='exhaustive' biome lint src/",
-    "lint:biome:fix": "ATTIO_LINT_MODE='exhaustive' biome lint --write src/",
-    "lint:attio": "ATTIO_LINT_MODE='exhaustive' eslint \"src/**/*.{ts,tsx}\" --config eslint.attio.config.js",
-    "lint:attio:fix": "ATTIO_LINT_MODE='exhaustive' eslint \"src/**/*.{ts,tsx}\" --config eslint.attio.config.js --fix",
-    "lint:fix": "npm run lint:biome:fix && npm run lint:attio:fix",
-    "check": "biome check src/",
-    "check:fix": "biome check --write src/",
-    "test": ""
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^2.2.0",
-    "@types/react": "19.1.10",
-    "node-fetch": "3.3.2",
-    "eslint": "^9.33.0",
-    "@typescript-eslint/parser": "^8.39.1"
-  },
-  "dependencies": {
-    "attio": "^0.0.1-experimental.20250815.1",
-    "event-target-polyfill": "^0.0.4",
-    "react": "19.1.1",
-    "ts-pattern": "^5.8.0",
-    "yet-another-abortcontroller-polyfill": "^0.0.4",
-    "zod": "4.0.17"
-  }
+	"name": "better-auth",
+	"description": "Better Auth",
+	"private": true,
+	"version": "0.0.1",
+	"type": "module",
+	"scripts": {
+		"attio": "attio",
+		"dev": "attio dev",
+		"build": "attio build",
+		"format": "biome format --write src/",
+		"format:check": "biome format src/",
+		"clean": "rm -rf lib && rm -rf dist",
+		"lint": "npm run lint:biome && npm run lint:attio",
+		"lint:biome": "ATTIO_LINT_MODE='exhaustive' biome lint src/",
+		"lint:biome:fix": "ATTIO_LINT_MODE='exhaustive' biome lint --write src/",
+		"lint:attio": "ATTIO_LINT_MODE='exhaustive' eslint \"src/**/*.{ts,tsx}\" --config eslint.attio.config.js",
+		"lint:attio:fix": "ATTIO_LINT_MODE='exhaustive' eslint \"src/**/*.{ts,tsx}\" --config eslint.attio.config.js --fix",
+		"lint:fix": "npm run lint:biome:fix && npm run lint:attio:fix",
+		"check": "biome check src/",
+		"check:fix": "biome check --write src/",
+		"test": ""
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.2.5",
+		"@types/react": "19.2.0",
+		"@typescript-eslint/parser": "^8.45.0",
+		"eslint": "^9.36.0",
+		"node-fetch": "3.3.2"
+	},
+	"dependencies": {
+		"attio": "0.0.1-experimental.20251001.1",
+		"event-target-polyfill": "^0.0.4",
+		"react": "19.2.0",
+		"ts-pattern": "^5.8.0",
+		"yet-another-abortcontroller-polyfill": "^0.0.4",
+		"zod": "4.1.11"
+	}
 }

@@ -2,7 +2,6 @@ import {
   type ComboboxOptionsProvider,
   Forms,
   type RecordAction,
-  Row,
   runQuery,
   showDialog,
   showToast,
@@ -78,7 +77,7 @@ export const recordAction: RecordAction = {
           [`invitations_${recordId}`]: [getWorkspaceInvitations, recordId],
         })
 
-        const {Form, SubmitButton, Combobox} = useForm(
+        const {Form, SubmitButton, InputGroup, Combobox} = useForm(
           {
             email: Forms.string(),
             role: Forms.string(),
@@ -132,7 +131,7 @@ export const recordAction: RecordAction = {
               hideDialog()
             }}
           >
-            <Row>
+            <InputGroup>
               <Combobox
                 label="User Email"
                 name="email"
@@ -145,7 +144,7 @@ export const recordAction: RecordAction = {
                 options={roleOptionsProvider}
                 placeholder="Select a role..."
               />
-            </Row>
+            </InputGroup>
             <SubmitButton label="Send Invitation" />
           </Form>
         )
